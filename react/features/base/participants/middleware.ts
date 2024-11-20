@@ -14,12 +14,13 @@ import {
     NOTIFICATION_TIMEOUT_TYPE,
     RAISE_HAND_NOTIFICATION_ID
 } from '../../notifications/constants';
+import { open as openParticipantsPane } from '../../participants-pane/actions';
 import { isForceMuted } from '../../participants-pane/functions';
 import { CALLING, INVITED } from '../../presence-status/constants';
 import { RAISE_HAND_SOUND_ID } from '../../reactions/constants';
 import { RECORDING_OFF_SOUND_ID, RECORDING_ON_SOUND_ID } from '../../recording/constants';
 import { APP_WILL_MOUNT, APP_WILL_UNMOUNT } from '../app/actionTypes';
-import { CONFERENCE_WILL_JOIN } from '../conference/actionTypes';
+import { CONFERENCE_JOINED, CONFERENCE_WILL_JOIN } from '../conference/actionTypes';
 import { forEachConference, getCurrentConference } from '../conference/functions';
 import { IJitsiConference } from '../conference/reducer';
 import { SET_CONFIG } from '../config/actionTypes';
@@ -201,6 +202,28 @@ MiddlewareRegistry.register(store => next => action => {
         return result;
     }
 
+    case CONFERENCE_JOINED: {
+        const result = next(action);
+
+        const state = store.getState();
+        const { startSilent } = state['features/base/config'];
+
+        if (startSilent) {
+            const localId = getLocalParticipant(store.getState())?.id;
+
+            if (localId) {
+                store.dispatch(participantUpdated({
+                    id: localId,
+                    local: true,
+                    isSilent: startSilent
+                }));
+            }
+        }
+
+        return result;
+    }
+
+
     case SET_LOCAL_PARTICIPANT_RECORDING_STATUS: {
         const state = store.getState();
         const { recording, onlySelf } = action;
@@ -236,10 +259,8 @@ MiddlewareRegistry.register(store => next => action => {
         let queue = getRaiseHandsQueue(store.getState());
 
         if (participant.raisedHandTimestamp) {
-            queue.push({
-                id: participant.id,
-                raisedHandTimestamp: participant.raisedHandTimestamp
-            });
+            queue = [ ...queue, { id: participant.id,
+                raisedHandTimestamp: participant.raisedHandTimestamp } ];
 
             // sort the queue before adding to store.
             queue = queue.sort(({ raisedHandTimestamp: a }, { raisedHandTimestamp: b }) => a - b);
@@ -433,7 +454,7 @@ StateListenerRegistry.register(
                         features: { 'screen-sharing': true }
                     })),
                 'localRecording': (participant: IJitsiParticipant, value: string) =>
-                    _localRecordingUpdated(store, conference, participant.getId(), value),
+                    _localRecordingUpdated(store, conference, participant.getId(), Boolean(value)),
                 'raisedHand': (participant: IJitsiParticipant, value: string) =>
                     _raiseHandUpdated(store, conference, participant.getId(), value),
                 'region': (participant: IJitsiParticipant, value: string) =>
@@ -693,8 +714,13 @@ function _participantJoinedOrUpdated(store: IStore, next: Function, action: AnyA
  * @returns {void}
  */
 function _localRecordingUpdated({ dispatch, getState }: IStore, conference: IJitsiConference,
-        participantId: string, newValue: string) {
+        participantId: string, newValue: boolean) {
     const state = getState();
+    const participant = getParticipantById(state, participantId);
+
+    if (participant?.localRecording === newValue) {
+        return;
+    }
 
     dispatch(participantUpdated({
         conference,
@@ -763,10 +789,19 @@ function _raiseHandUpdated({ dispatch, getState }: IStore, conference: IJitsiCon
             || isForceMuted(participant, MEDIA_TYPE.VIDEO, state);
     }
 
-    const action = shouldDisplayAllowAction ? {
-        customActionNameKey: [ 'notify.allowAction' ],
-        customActionHandler: [ () => dispatch(approveParticipant(participantId)) ]
-    } : {};
+    let action;
+
+    if (shouldDisplayAllowAction) {
+        action = {
+            customActionNameKey: [ 'notify.allowAction' ],
+            customActionHandler: [ () => dispatch(approveParticipant(participantId)) ]
+        };
+    } else {
+        action = {
+            customActionNameKey: [ 'notify.viewParticipants' ],
+            customActionHandler: [ () => dispatch(openParticipantsPane()) ]
+        };
+    }
 
     if (raisedHandTimestamp) {
         let notificationTitle;
@@ -790,7 +825,7 @@ function _raiseHandUpdated({ dispatch, getState }: IStore, conference: IJitsiCon
             concatText: true,
             uid: RAISE_HAND_NOTIFICATION_ID,
             ...action
-        }, shouldDisplayAllowAction ? NOTIFICATION_TIMEOUT_TYPE.MEDIUM : NOTIFICATION_TIMEOUT_TYPE.SHORT));
+        }, NOTIFICATION_TIMEOUT_TYPE.MEDIUM));
         dispatch(playSound(RAISE_HAND_SOUND_ID));
     }
 }

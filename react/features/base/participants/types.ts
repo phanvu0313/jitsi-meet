@@ -23,13 +23,15 @@ export interface IParticipant {
     getId?: Function;
     id: string;
     isJigasi?: boolean;
+    isPromoted?: boolean;
     isReplaced?: boolean;
     isReplacing?: number;
+    isSilent?: boolean;
     jwtId?: string;
     loadableAvatarUrl?: string;
     loadableAvatarUrlUseCORS?: boolean;
     local?: boolean;
-    localRecording?: string;
+    localRecording?: boolean;
     name?: string;
     pinned?: boolean;
     presence?: string;

@@ -28,7 +28,13 @@ local FORM_KEY = 'muc#roominfo_jitsimetadata';
 local muc_component_host = module:get_option_string('muc_component');
 
 if muc_component_host == nil then
-    module:log("error", "No muc_component specified. No muc to operate on!");
+    module:log('error', 'No muc_component specified. No muc to operate on!');
+    return;
+end
+
+local muc_domain_base = module:get_option_string('muc_mapper_domain_base');
+if not muc_domain_base then
+    module:log('warn', 'No muc_domain_base option set.');
     return;
 end
 
@@ -36,6 +42,7 @@ local breakout_rooms_component_host = module:get_option_string('breakout_rooms_c
 
 module:log("info", "Starting room metadata for %s", muc_component_host);
 
+local main_muc_module;
 
 -- Utility functions
 
@@ -86,7 +93,9 @@ function room_created(event)
         return ;
     end
 
-    room.jitsiMetadata = {};
+    if not room.jitsiMetadata then
+        room.jitsiMetadata = {};
+    end
 end
 
 function on_message(event)
@@ -126,11 +135,6 @@ function on_message(event)
         return false;
     end
 
-    if occupant.role ~= 'moderator' then
-        module:log('warn', 'Occupant %s is not moderator and not allowed this operation for %s', from, room.jid);
-        return false;
-    end
-
     local jsonData, error = json.decode(messageText);
     if jsonData == nil then -- invalid JSON
         module:log("error", "Invalid JSON message: %s error:%s", messageText, error);
@@ -142,9 +146,25 @@ function on_message(event)
         return false;
     end
 
+    if occupant.role ~= 'moderator' then
+        -- will return a non nil filtered data to use, if it is nil, it is not allowed
+        local res = module:context(muc_domain_base):fire_event('jitsi-metadata-allow-moderation',
+                { room = room; actor = occupant; key = jsonData.key ; data = jsonData.data; session = session; });
+
+        if not res then
+            module:log('warn', 'Occupant %s is not moderator and not allowed this operation for %s', from, room.jid);
+            return false;
+        end
+
+        jsonData.data = res;
+    end
+
     room.jitsiMetadata[jsonData.key] = jsonData.data;
 
     broadcastMetadata(room);
+
+    -- fire and event for the change
+    main_muc_module:fire_event('jitsi-metadata-updated', { room = room; actor = occupant; key = jsonData.key; });
 
     return true;
 end
@@ -156,6 +176,8 @@ module:hook("message/host", on_message);
 
 -- operates on already loaded main muc module
 function process_main_muc_loaded(main_muc, host_module)
+    main_muc_module = host_module;
+
     module:log('debug', 'Main muc loaded');
     module:log("info", "Hook to muc events on %s", muc_component_host);
 
@@ -171,6 +193,10 @@ function process_main_muc_loaded(main_muc, host_module)
         local room = event.room;
 
         table.insert(event.form, getFormData(room));
+    end);
+    -- The room metadata was updated internally (from another module).
+    host_module:hook("room-metadata-changed", function(event)
+        broadcastMetadata(event.room);
     end);
 end
 

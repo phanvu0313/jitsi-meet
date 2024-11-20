@@ -8,11 +8,12 @@ import { isMobileBrowser } from '../../../base/environment/utils';
 import { getLocalParticipant, isLocalParticipantModerator } from '../../../base/participants/functions';
 import ContextMenu from '../../../base/ui/components/web/ContextMenu';
 import { isReactionsButtonEnabled, shouldDisplayReactionsButtons } from '../../../reactions/functions.web';
+import { isTranscribing } from '../../../transcribing/functions';
 import {
     setHangupMenuVisible,
     setOverflowMenuVisible,
     setToolbarHovered,
-    showToolbox
+    setToolboxVisible
 } from '../../actions.web';
 import {
     getJwtDisabledButtons,
@@ -20,7 +21,7 @@ import {
     isButtonEnabled,
     isToolboxVisible
 } from '../../functions.web';
-import { useKeyboardShortcuts } from '../../hooks.web';
+import { useKeyboardShortcuts, useToolboxButtons } from '../../hooks.web';
 import { IToolboxButton } from '../../types';
 import HangupButton from '../HangupButton';
 
@@ -99,12 +100,17 @@ export default function Toolbox({
     const isDialogVisible = useSelector((state: IReduxState) => Boolean(state['features/base/dialog'].component));
     const jwt = useSelector((state: IReduxState) => state['features/base/jwt'].jwt);
     const localParticipant = useSelector(getLocalParticipant);
-    const jwtDisabledButtons = getJwtDisabledButtons(jwt, localParticipant?.features);
+    const transcribing = useSelector(isTranscribing);
+
+    // Do not convert to selector, it returns new array and will cause re-rendering of toolbox on every action.
+    const jwtDisabledButtons = getJwtDisabledButtons(transcribing, isModerator, jwt, localParticipant?.features);
+
     const reactionsButtonEnabled = useSelector(isReactionsButtonEnabled);
     const _shouldDisplayReactionsButtons = useSelector(shouldDisplayReactionsButtons);
     const toolbarVisible = useSelector(isToolboxVisible);
     const mainToolbarButtonsThresholds
         = useSelector((state: IReduxState) => state['features/toolbox'].mainToolbarButtonsThresholds);
+    const allButtons = useToolboxButtons(customToolbarButtons);
 
     useKeyboardShortcuts(toolbarButtonsToUse);
 
@@ -192,15 +198,22 @@ export default function Toolbox({
     }, [ dispatch ]);
 
     /**
-     * Toggle the toolbar visibility when tabbing into it.
+     * Handle focus on the toolbar.
      *
      * @returns {void}
      */
-    const onTabIn = useCallback(() => {
-        if (!toolbarVisible) {
-            dispatch(showToolbox());
-        }
-    }, [ toolbarVisible, dispatch ]);
+    const handleFocus = useCallback(() => {
+        dispatch(setToolboxVisible(true));
+    }, [ dispatch ]);
+
+    /**
+     * Handle blur the toolbar..
+     *
+     * @returns {void}
+     */
+    const handleBlur = useCallback(() => {
+        dispatch(setToolboxVisible(false));
+    }, [ dispatch ]);
 
     if (iAmRecorder || iAmSipGateway) {
         return null;
@@ -216,7 +229,7 @@ export default function Toolbox({
     const containerClassName = `toolbox-content${isMobile || isNarrowLayout ? ' toolbox-content-mobile' : ''}`;
 
     const { mainMenuButtons, overflowMenuButtons } = getVisibleButtons({
-        customToolbarButtons,
+        allButtons,
         buttonsWithNotifyClick,
         toolbarButtons: toolbarButtonsToUse,
         clientWidth,
@@ -225,10 +238,9 @@ export default function Toolbox({
     });
     const raiseHandInOverflowMenu = overflowMenuButtons.some(({ key }) => key === 'raisehand');
     const showReactionsInOverflowMenu = _shouldDisplayReactionsButtons
-    && (
-        (!reactionsButtonEnabled && (raiseHandInOverflowMenu || isNarrowLayout || isMobile))
-            || overflowMenuButtons.some(({ key }) => key === 'reactions')
-    );
+        && (
+            (!reactionsButtonEnabled && (raiseHandInOverflowMenu || isNarrowLayout || isMobile))
+            || overflowMenuButtons.some(({ key }) => key === 'reactions'));
     const showRaiseHandInReactionsMenu = showReactionsInOverflowMenu && raiseHandInOverflowMenu;
 
     return (
@@ -238,7 +250,8 @@ export default function Toolbox({
             <div className = { containerClassName }>
                 <div
                     className = 'toolbox-content-wrapper'
-                    onFocus = { onTabIn }
+                    onBlur = { handleBlur }
+                    onFocus = { handleFocus }
                     { ...(isMobile ? {} : {
                         onMouseOut,
                         onMouseOver

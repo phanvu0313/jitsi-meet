@@ -22,7 +22,7 @@
         "noResults": "Keine passenden Ergebnisse",
         "outlookEmail": "Outlook-E-Mail",
         "phoneNumbers": "Telefonnummern",
-        "searching": "Suche...",
+        "searching": "Suche…",
         "shareInvite": "Einladung zur Versammlung teilen",
         "shareLink": "Teilen Sie den Konferenzlink, um andere einzuladen",
         "shareStream": "Den Livestreaminglink freigeben",
@@ -225,7 +225,7 @@
         "or": "oder",
         "termsAndConditions": "Indem Sie fortfahren, stimmen Sie unseren <a href='{{termsAndConditionsLink}}' rel='noopener noreferrer' target='_blank'>Nutzungsbedingungen</a> zu.",
         "title": "Die Konferenz wird in {{app}} geöffnet …",
-        "titleNew": "Konferenz starten ...",
+        "titleNew": "Konferenz starten…",
         "tryAgainButton": "Erneut versuchen",
         "unsupportedBrowser": "Sie verwenden einen Browser, der noch nicht unterstützt wird."
     },
@@ -439,7 +439,10 @@
         "shareScreenWarningD2": "müssen Sie Ihre Audiofreigabe stoppen und dann die Bildschirmfreigabe mit der Option \"Audio freigeben\" starten.",
         "shareScreenWarningH1": "Wenn Sie Ihren Bildschirm freigeben wollen:",
         "shareScreenWarningTitle": "Sie müssen die Audiofreigabe beenden, bevor Sie den Bildschirm freigeben können",
+        "shareVideoConfirmPlay": "Sie öffnen dazu eine externe Seite. Möchten Sie fortfahren?",
+        "shareVideoConfirmPlayTitle": "{{name}} hat mit Ihnen ein Video geteilt.",
         "shareVideoLinkError": "Bitte einen gültigen Link angeben.",
+        "shareVideoLinkStopped": "Das Video von {{name}} wurde gestoppt.",
         "shareVideoTitle": "Video teilen",
         "shareYourScreen": "Bildschirmfreigabe ein-/ausschalten",
         "shareYourScreenDisabled": "Bildschirmfreigabe deaktiviert.",
@@ -762,7 +765,7 @@
         "linkToSalesforceDescription": "Sie können die Zusammenfassung der Konferenz mit einem Objekt bei Salesforce verlinken.",
         "linkToSalesforceError": "Konferenz konnte nicht mit Salesforce verlinkt werden",
         "linkToSalesforceKey": "Konferenz verlinken",
-        "linkToSalesforceProgress": "Konferenz wird mit Salesforce verlinkt...",
+        "linkToSalesforceProgress": "Konferenz wird mit Salesforce verlinkt…",
         "linkToSalesforceSuccess": "Die Konferenz wurde mit Salesforce verlinkt",
         "localRecordingStarted": "{{name}} hat eine lokale Aufzeichnung gestartet.",
         "localRecordingStopped": "{{name}} hat eine lokale Aufzeichnung gestoppt.",
@@ -786,6 +789,7 @@
         "newDeviceAction": "Verwenden",
         "newDeviceAudioTitle": "Neues Audiogerät erkannt",
         "newDeviceCameraTitle": "Neue Kamera erkannt",
+        "nextToSpeak": "Sie sind als Nächstes an der Reihe zu sprechen",
         "noiseSuppressionDesktopAudioDescription": "Die Rauschunterdrückung kann nicht genutzt werden, wenn der Computersound geteilt wird, bitte zuerst deaktivieren und dann nochmals versuchen.",
         "noiseSuppressionFailedTitle": "Rauschunterdrückung konnte nicht gestartet werden",
         "noiseSuppressionStereoDescription": "Rauschunterdrückung unterstützt aktuell keinen Stereoton.",
@@ -820,8 +824,11 @@
         "videoUnmuteBlockedDescription": "Die Kamera und Bildschirmfreigabe kann aus Überlastungsschutzgründen temporär nicht eingeschaltet werden.",
         "videoUnmuteBlockedTitle": "Kamera und Bildschirmfreigabe kann nicht aktiviert werden!",
         "viewLobby": "Lobby ansehen",
+        "viewParticipants": "Personen anzeigen",
         "viewVisitors": "Gäste anzeigen",
         "waitingParticipants": "{{waitingParticipants}} Personen",
+        "waitingVisitors": "In der Lobby wartende Gäste: {{waitingVisitors}}",
+        "waitingVisitorsTitle": "Die Konferenz wurde noch nicht gestartet!",
         "whiteboardLimitDescription": "Bitte speichern Sie Ihre Inhalte, da das Nutzungslimit bald erreicht wird und dann Ihr Whiteboard geschlossen wird.",
         "whiteboardLimitTitle": "Whiteboard-Nutzung"
     },
@@ -835,7 +842,10 @@
             "audioModeration": "Für sich selbst die Stummschaltung aufzuheben",
             "blockEveryoneMicCamera": "Kamera und Mikrofon von allen sperren",
             "breakoutRooms": "Breakout-Räume",
+            "goLive": "Live gehen",
             "invite": "Person einladen",
+            "lowerAllHands": "Alle Hände senken",
+            "lowerHand": "Hand senken",
             "moreModerationActions": "Weitere Moderationsoptionen",
             "moreModerationControls": "Weitere Moderationsoptionen",
             "moreParticipantOptions": "Mehr Optionen für Anwesende",
@@ -852,6 +862,7 @@
         "headings": {
             "lobby": "Lobby ({{count}})",
             "participantsList": "Anwesende ({{count}})",
+            "visitorInQueue": " (Wartende Gäste {{count}})",
             "visitorRequests": " (Anfragen {{count}})",
             "visitors": "Gäste ({{count}})",
             "waitingLobby": "In der Lobby ({{count}})"
@@ -865,10 +876,13 @@
     "pinnedParticipant": "Die Person ist angeheftet",
     "polls": {
         "answer": {
+            "edit": "Bearbeiten",
+            "send": "Senden",
             "skip": "Überspringen",
             "submit": "Speichern"
         },
         "by": "Von {{ name }}",
+        "closeButton": "Umfrage schließen",
         "create": {
             "addOption": "Antwort hinzufügen",
             "answerPlaceholder": "Antwort {{index}}",
@@ -878,7 +892,8 @@
             "pollQuestion": "Frage",
             "questionPlaceholder": "Eine Frage stellen",
             "removeOption": "Antwort entfernen",
-            "send": "Erstellen"
+            "save": "Erstellen",
+            "send": "Senden"
         },
         "errors": {
             "notUniqueOption": "Optionen müssen einzigartig sein"
@@ -907,9 +922,11 @@
         "configuringDevices": "Geräte werden eingerichtet …",
         "connectedWithAudioQ": "Sie sind mit Audio verbunden?",
         "connection": {
+            "failed": "Verbindungstest fehlgeschlagen!",
             "good": "Ihre Internetverbindung sieht gut aus!",
             "nonOptimal": "Ihre Internetverbindung ist nicht optimal.",
-            "poor": "Sie haben eine schlechte Internetverbindung."
+            "poor": "Sie haben eine schlechte Internetverbindung.",
+            "running": "Verbindung wird getestet…"
         },
         "connectionDetails": {
             "audioClipping": "Ihr Ton wird wahrscheinlich abgehackt sein.",
@@ -918,6 +935,7 @@
             "goodQuality": "Großartig! Ihre Bild- und Tonqualität sollte super sein.",
             "noMediaConnectivity": "Es konnte für diesen Test keine Medienverbindung hergestellt werden. Das wird gewöhnlich durch eine Firewall oder ein NAT ausgelöst.",
             "noVideo": "Ihr Bild wird wahrscheinlich eine schlechte Qualität haben.",
+            "testFailed": "Der Verbindungstest ist fehlgeschlagen, dies beeinträchtigt evtl. Ihre Qualität.",
             "undetectable": "Wenn Sie mit Ihrem Browser weiterhin Probleme in Konferenzen haben, sollten Sie die Verbindung und Funktion Ihrer Lautsprecher, Ihres Mikrofons und Ihrer Kamera überprüfen. Stellen Sie außerdem sicher, dass Ihr Browser die erforderlichen Rechte hat, auf das Mikrofon und die Kamera zuzugreifen, und dass Sie die neuste Browserversion installiert haben. Sollten Sie immer noch Probleme haben, kontaktieren Sie bitte den Support der Webanwendung.",
             "veryPoorConnection": "Ihre Konferenzqualität wird wahrscheinlich sehr schlecht sein.",
             "videoFreezing": "Ihr Bild wird wahrscheinlich einfrieren, schwarz werden und eine geringe Auflösung haben.",
@@ -1081,6 +1099,7 @@
         "desktopShareWarning": "Sie müssen die Bildschirmfreigabe neustarten, damit die Einstellung übernommen wird.",
         "devices": "Geräte",
         "followMe": "Follow-me für alle Personen",
+        "followMeRecorder": "Aufnahme folgt mir",
         "framesPerSecond": "FPS",
         "incomingMessage": "Eingehende Nachricht",
         "language": "Sprache",
@@ -1227,6 +1246,7 @@
             "lobbyButton": "Lobbymodus ein-/ausschalten",
             "localRecording": "Lokale Aufzeichnungssteuerelemente ein-/ausschalten",
             "lockRoom": "Konferenzpasswort ein-/ausschalten",
+            "love": "Herz",
             "lowerHand": "Hand senken",
             "moreActions": "Menü „Weitere Einstellungen“ ein-/ausschalten",
             "moreActionsMenu": "Menü „Weitere Einstellungen“",
@@ -1244,6 +1264,7 @@
             "privateMessage": "Private Nachricht senden",
             "profile": "Profil bearbeiten",
             "raiseHand": "Hand heben",
+            "react": "Chat-Interaktionen",
             "reactions": "Interaktionen",
             "reactionsMenu": "Interaktionsmenü öffnen / schließen",
             "recording": "Aufzeichnung ein-/ausschalten",
@@ -1315,6 +1336,7 @@
         "lobbyButtonEnable": "Lobbymodus aktivieren",
         "login": "Anmelden",
         "logout": "Abmelden",
+        "love": "Herz",
         "lowerYourHand": "Hand senken",
         "moreActions": "Weitere Einstellungen",
         "moreOptions": "Weitere Optionen",
@@ -1340,6 +1362,7 @@
         "raiseYourHand": "Melden",
         "reactionBoo": "Buhen senden",
         "reactionClap": "Klatschen senden",
+        "reactionHeart": "Herz senden",
         "reactionLaugh": "Lachen senden",
         "reactionLike": "Daumen hoch senden",
         "reactionSilence": "Stille senden",
@@ -1373,7 +1396,7 @@
     "transcribing": {
         "ccButtonTooltip": "Untertitel ein-/ausschalten",
         "expandedLabel": "Transkribieren ist derzeit eingeschaltet",
-        "failedToStart": "Transkribieren konnte nicht gestartet werden",
+        "failed": "Transkribieren fehlgeschlagen",
         "labelToolTip": "Das Meeting wird transkribiert",
         "sourceLanguageDesc": "Aktuell ist die Sprache der Konferenz auf <b>{{sourceLanguage}}</b> eingestellt. <br/> Sie könne dies hier ",
         "sourceLanguageHere": "ändern",
@@ -1385,16 +1408,7 @@
     },
     "unpinParticipant": "{{participantName}} - Nicht mehr anheften",
     "userMedia": {
-        "androidGrantPermissions": "Wählen Sie <b><i>Zulassen</i></b>, wenn der Browser um Berechtigungen bittet.",
-        "chromeGrantPermissions": "Wählen Sie <b><i>Zulassen</i></b>, wenn der Browser um Berechtigungen bittet.",
-        "edgeGrantPermissions": "Wählen Sie <b><i>Ja</i></b>, wenn der Browser um Berechtigungen bittet.",
-        "electronGrantPermissions": "Bitte Berechtigungen zur Verwendung der Kamera und des Mikrofons erteilen",
-        "firefoxGrantPermissions": "Wählen Sie <b><i>Erlauben</i></b>, wenn der Browser um Berechtigungen bittet.",
-        "iexplorerGrantPermissions": "Wählen Sie <b><i>OK</i></b>, wenn der Browser um Berechtigungen bittet.",
-        "nwjsGrantPermissions": "Bitte Berechtigungen zur Verwendung der Kamera und des Mikrofons erteilen",
-        "operaGrantPermissions": "Wählen Sie <b><i>Zulassen</i></b>, wenn der Browser um Berechtigungen bittet.",
-        "react-nativeGrantPermissions": "Wählen Sie <b><i>Erlauben</i></b>, wenn der Browser um Berechtigungen bittet.",
-        "safariGrantPermissions": "Wählen Sie <b><i>OK</i></b>, wenn der Browser um Berechtigungen bittet."
+        "grantPermissions": "Bitte Berechtigungen zur Verwendung der Kamera und des Mikrofons erteilen."
     },
     "videoSIPGW": {
         "busy": "Es stehen keine freien Ressourcen zur Verfügung. Bitte versuchen Sie es später noch einmal.",
@@ -1473,7 +1487,7 @@
         "image6": "Wald",
         "image7": "Sonnenaufgang",
         "none": "keiner",
-        "pleaseWait": "Bitte warten...",
+        "pleaseWait": "Bitte warten…",
         "removeBackground": "Hintergrund entfernen",
         "slightBlur": "Hintergrund leicht unscharf",
         "title": "Hintergründe",
@@ -1483,16 +1497,22 @@
     },
     "visitors": {
         "chatIndicator": "(Gast)",
+        "joinMeeting": {
+            "description": "Sie beobachten derzeit diese Konferenz.",
+            "raiseHand": "Hand heben",
+            "title": "Konferenz wird beigetreten",
+            "wishToSpeak": "Wenn Sie sprechen möchten, heben Sie bitte unten Ihre Hand und warten Sie auf die Zustimmung der Moderation"
+        },
         "labelTooltip": "Anzahl Gäste: {{count}}",
         "notification": {
             "demoteDescription": "Hierhin verschoben von {{actor}}, bitte melden Sie sich um teilzunehmen",
-            "description": "Bitte melden Sie sich um teilzunehmen",
             "noMainParticipantsDescription": "Eine Person muss die Konferenz starten. Bitte versuchen Sie es gleich noch einmal.",
             "noMainParticipantsTitle": "Diese Konferenz wurde noch nicht gestartet.",
             "noVisitorLobby": "Sie können nicht teilnehmen, solange die Lobby für diese Konferenz aktiviert ist.",
             "notAllowedPromotion": "Eine Person muss Ihre Anfrage erst erlauben.",
             "title": "Sie sind Gast in der Konferenz"
-        }
+        },
+        "waitingMessage": "Sie werden der Konferenz beitreten, sobald sie gestartet ist!"
     },
     "volumeSlider": "Lautstärkeregler",
     "welcomepage": {
